@@ -25,7 +25,10 @@ function Modal({ list, selectedPokemonIndex, setSelectedPokemonIndex }: Props) {
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"></button>
+                aria-label="Close"
+                onClick={() => {
+                  setSelectedPokemonIndex(-1);
+                }}></button>
             </div>
             <div className="modal-body">
               {list[selectedPokemonIndex] + " selected pokemon description"}
