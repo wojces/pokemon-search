@@ -1,43 +1,26 @@
-import { useState } from "react";
+interface Props {
+  list: string[];
+  selectedPokemonIndex: number;
+  setSelectedPokemonIndex: (index: number) => void;
+}
 
-function PokemonList() {
-  const list = [
-    "Pikachu",
-    "Charizard",
-    "Bulbasaur",
-    "Jigglypuff",
-    "Snorlax",
-    "Gyarados",
-    "Eevee",
-    "Vaporeon",
-    "Mewtwo",
-    "Meowth",
-    "Machamp",
-    "Gengar",
-    "Blastoise",
-    "Psyduck",
-    "Alakazam",
-    "Dragonite",
-    "Arcanine",
-    "Squirtle",
-    "Lapras",
-    "Ditto",
-  ];
-  const [selectedPokemon, setSelectedPokemon] = useState(-1);
-
-  function handleClick(name: string, index: number) {
-    return console.log(index + ". " + name);
-  }
-
+function PokemonList({
+  list,
+  selectedPokemonIndex,
+  setSelectedPokemonIndex,
+}: Props) {
   const pokemonList = list.map((pokemon, index) => (
     <li
       className={
-        selectedPokemon === index ? "list-group-item active" : "list-group-item"
+        selectedPokemonIndex === index
+          ? "list-group-item active"
+          : "list-group-item"
       }
       key={index}
+      data-bs-toggle="modal"
+      data-bs-target="#staticBackdrop"
       onClick={() => {
-        setSelectedPokemon(index);
-        handleClick(pokemon, index);
+        setSelectedPokemonIndex(index);
       }}>
       {pokemon}
     </li>
@@ -45,7 +28,6 @@ function PokemonList() {
 
   return (
     <>
-      <h1>Pokemon List</h1>
       <ul className="list-group">{pokemonList}</ul>
     </>
   );
