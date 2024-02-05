@@ -95,7 +95,7 @@ function PokemonContainer() {
   }
 
   return (
-    <div className="container">
+    <div>
       <h1 className="p-2 mt-2 text-center">Pokemon List</h1>
 
       {state.selectedPokemonDetails && (
