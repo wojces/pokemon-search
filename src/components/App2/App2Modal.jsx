@@ -81,12 +81,6 @@ export default function App2Modal({ modalIsVisible, closeModal, lastId }) {
       contract_up_to: "",
       storage: "local",
     };
-    console.log(
-      "Added: " +
-        organization.name +
-        " with id: " +
-        organization.id_organization
-    );
     localStorage.setItem(
       "localOrganization" + organization.id_organization,
       JSON.stringify(organization)
@@ -176,5 +170,3 @@ export default function App2Modal({ modalIsVisible, closeModal, lastId }) {
     </>
   );
 }
-
-// dlaczego p wyswietlajacy msg sie nie aktualizuje w modalu mimo że w consoli smiga

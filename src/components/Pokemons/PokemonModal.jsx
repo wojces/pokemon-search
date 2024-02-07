@@ -1,7 +1,12 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useSelector } from "react-redux";
 
-function PokemonModal({ modalIsVisible, setModalVisibility, pokemonDetails }) {
+function PokemonModal({ modalIsVisible, setModalVisibility }) {
+  const pokemonDetails = useSelector(
+    (state) => state.pokemons.selectedPokemonDetails
+  );
+
   const statsList = pokemonDetails.stats.map((stat) => (
     <li key={stat.stat.name}>{stat.stat.name + ": " + stat.base_stat}</li>
   ));
