@@ -1,17 +1,14 @@
 import ListGroup from "react-bootstrap/ListGroup";
+import { useSelector } from "react-redux";
 
-function PokemonList({
-  pokemonList,
-  selectedPokemonIndex,
-  selectedPokemonUrl,
-  modalIsVisible,
-}) {
+function PokemonList({ selectedPokemonUrl, modalIsVisible }) {
+  const pokemonList = useSelector((state) => state.pokemons.pokemonList);
+
   const list = pokemonList.map((pokemon, index) => (
     <ListGroup.Item
       key={index}
       onClick={() => {
         modalIsVisible(true);
-        selectedPokemonIndex(index);
         selectedPokemonUrl(pokemon.url);
       }}>
       {pokemon.name}

@@ -23,19 +23,6 @@ const initialState = {
 export default function SigningView() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function handleEnteredEmail(email) {
-    dispatch({
-      type: "enteredEmail",
-      enteredEmail: email,
-    });
-  }
-  function handleEnteredPassword(password) {
-    dispatch({
-      type: "enteredPassword",
-      enteredPassword: password,
-    });
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
     const res = renderEmailValidationResult();
@@ -105,7 +92,12 @@ export default function SigningView() {
               className="form-control"
               placeholder="name@example.com"
               value={state.enteredEmail}
-              onChange={(e) => handleEnteredEmail(e.target.value)}
+              onChange={(e) =>
+                dispatch({
+                  type: "enteredEmail",
+                  enteredEmail: e.target.value,
+                })
+              }
             />
             <div>{renderEmailValidationResult()}</div>
           </div>
@@ -117,7 +109,12 @@ export default function SigningView() {
               type="password"
               className="form-control"
               value={state.enteredPassword}
-              onChange={(e) => handleEnteredPassword(e.target.value)}
+              onChange={(e) =>
+                dispatch({
+                  type: "enteredPassword",
+                  enteredPassword: e.target.value,
+                })
+              }
             />
           </div>
         </div>

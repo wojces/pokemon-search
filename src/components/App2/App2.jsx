@@ -1,34 +1,24 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Organization } from "../../model/organization";
 import dayjs from "dayjs";
 import App2Modal from "./App2Modal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchLocalOrganizations,
+  fetchDataOrganizations,
+} from "../../features/app2/app2Slice";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "fetchDataOrganizations": {
-      return { ...state, dataOrganizations: action.dataOrganizations };
-    }
-    case "fetchLocalOrganizations": {
-      return { ...state, localOrganizations: action.localOrg };
-    }
-    case "setModalVisible": {
-      return { ...state, modalIsVisible: action.modal };
-    }
-    default: {
-      return state;
-    }
-  }
-}
-
-const initialState = {
-  localOrganizations: [],
-  dataOrganizations: [],
-  modalIsVisible: false,
-};
-
-export default function App2({ token }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export default function App2() {
+  const [modal, setModal] = useState(false);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.app2.token);
+  const localOrganizations = useSelector(
+    (state) => state.app2.localOrganizations
+  );
+  const dataOrganizations = useSelector(
+    (state) => state.app2.dataOrganizations
+  );
 
   // dayjs
   var now = dayjs().format("DD/MM/YYYY");
@@ -45,11 +35,8 @@ export default function App2({ token }) {
       let newOrganization = localStorage.getItem(key);
       localOrgList.push(JSON.parse(newOrganization));
       localOrgList.sort((a, b) => b.id_organization - a.id_organization);
-      dispatch({
-        type: "fetchLocalOrganizations",
-        localOrg: localOrgList,
-      });
     });
+    dispatch(fetchLocalOrganizations(localOrgList));
   }
 
   function getDataOrganizations() {
@@ -62,17 +49,14 @@ export default function App2({ token }) {
       },
     })
       .then((res) => {
-        dispatch({
-          type: "fetchDataOrganizations",
-          dataOrganizations: res.data.content,
-        });
+        dispatch(fetchDataOrganizations(res.data.content));
       })
       .catch((err) => console.log(err));
   }
 
   function lastId() {
-    const lastId = state.localOrganizations
-      .concat(state.dataOrganizations)
+    const lastId = localOrganizations
+      .concat(dataOrganizations)
       .reduce((id, org) => {
         return Math.max(id, org.id_organization);
       }, 0);
@@ -80,8 +64,8 @@ export default function App2({ token }) {
   }
   const lastIdOrg = lastId();
 
-  const tableRow = state.localOrganizations
-    .concat(state.dataOrganizations)
+  const tableRow = localOrganizations
+    .concat(dataOrganizations)
     .map((org, index) => {
       const organization = new Organization(org);
       return (
@@ -100,8 +84,8 @@ export default function App2({ token }) {
     <div className="container">
       <App2Modal
         lastId={lastIdOrg}
-        modalIsVisible={state.modalIsVisible}
-        closeModal={() => dispatch({ type: "setModalVisible", modal: false })}
+        modalIsVisible={modal}
+        closeModal={() => setModal(false)}
       />
       <h1 className="mt-4 text-center">Organizations List</h1>
       <table className="table">
@@ -118,9 +102,7 @@ export default function App2({ token }) {
         <tbody>{tableRow}</tbody>
       </table>
       <div className="d-flex justify-content-center">
-        <button
-          className="btn btn-secondary"
-          onClick={() => dispatch({ type: "setModalVisible", modal: true })}>
+        <button className="btn btn-secondary" onClick={() => setModal(true)}>
           Add organization
         </button>
       </div>

@@ -1,36 +1,26 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import SigningView from "./SigningView";
 import App2 from "./App2";
-import { useReducer, useEffect } from "react";
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "setToken": {
-      return { ...state, token: action.token, isSignIn: action.isSignIn };
-    }
-    default: {
-      return { state };
-    }
-  }
-}
-
-const initialState = { isSignIn: false, token: null };
+import { setToken } from "../../features/app2/app2Slice";
+import { useDispatch } from "react-redux";
 
 export default function App2Container() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const dispatch = useDispatch();
+  const [signIn, setSignIn] = useState(false);
 
   let tokenData = sessionStorage.getItem("accesToken");
 
   useEffect(() => {
     if (tokenData !== null) {
-      dispatch({ type: "setToken", token: tokenData, isSignIn: true });
+      dispatch(setToken(tokenData));
+      setSignIn(true);
     }
   }, [tokenData]);
 
   return (
     <div>
-      {!state.isSignIn && <SigningView />}
-      {state.isSignIn && <App2 token={state.token} />}
+      {!signIn && <SigningView />}
+      {signIn && <App2 />}
     </div>
   );
 }
